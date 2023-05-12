@@ -4,6 +4,7 @@ import UserCard from "./UserCard";
 import "./UsersList.css";
 
 const UsersList = ({ users, addToTeam }) => {
+  
   return (
     <div className="users-list">
       {users.map((user) => (

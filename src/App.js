@@ -16,7 +16,7 @@ function App() {
   let [currentPage, setCurrentPage] = useState(1);
   let [usersPerPage] = useState(20);
   let [team, setTeam] = useState([]);
-
+ 
   useEffect(() => {
     setUsers(data);
    
@@ -28,18 +28,16 @@ function App() {
   const filterUsers = () => {
     
     let filteredUsers = users;
-    
-    if ( searchTerm !== "") {
 
+    if ( searchTerm !== "") {
       filteredUsers = users.filter((user) =>
       ( (user.first_name + " " + user.last_name).toLowerCase().includes(searchTerm.toLowerCase()) || user.first_name.toLowerCase() == searchTerm.toLowerCase() )
     );
     }
 
-
     if (domainFilter !== "") {
       filteredUsers = filteredUsers.filter(
-        (user) => user.domain === domainFilter
+        (user) => user.domain.toLowerCase() === domainFilter.toLowerCase()
       );
     }
 
@@ -55,13 +53,14 @@ function App() {
       );
     }
 
+   
     return filteredUsers;
   };
 
   const addToTeam = ( user ) => {   
   
     const check = team.filter ( ( e ) => e.id == user.id )     // Check user lready exist or not
-console.log(check)
+
     if ( check.length == 0  ) setTeam ( [...team , user] ) 
 
     else alert("User Already Exist")
@@ -71,11 +70,18 @@ console.log(check)
 
   const paginate = (pageNumber) => { setCurrentPage(pageNumber) };
 
-  // After Filter
+  //After Filter
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filterUsers().slice(indexOfFirstUser, indexOfLastUser);
 
+  const currentUsers = filterUsers().filter( (e) => {
+   //console.log(e.id)
+   return ( Number(e.id) >= indexOfFirstUser && Number(e.id) < indexOfLastUser) 
+  }
+  )  
+ 
+//  console.log(filterUsers())
+ console.log(currentUsers , indexOfFirstUser , indexOfLastUser , currentPage)
 
   return (
     <div className="App">
@@ -108,12 +114,7 @@ console.log(check)
 
       <UsersList users={currentUsers} addToTeam={addToTeam} />
      
-      <Pagination usersPerPage={usersPerPage} totalUsers={filterUsers().length}
-  
-   paginate={paginate}
-     
-        currentPage={currentPage}
-        />
+<Pagination usersPerPage={usersPerPage} totalUsers={filterUsers().length} paginate={paginate}  currentPage={currentPage}  />
 
 
         <Team team={team} removeFromTeam={removeFromTeam} />
