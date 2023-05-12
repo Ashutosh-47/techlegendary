@@ -72,11 +72,11 @@ function App() {
 
   //After Filter
   const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const indexOfFirstUser = (indexOfLastUser - usersPerPage) +1; // To start next page from 21 not 20
 
   const currentUsers = filterUsers().filter( (e) => {
-   //console.log(e.id)
-   return ( Number(e.id) >= indexOfFirstUser && Number(e.id) < indexOfLastUser) 
+   
+   return ( Number(e.id) >= indexOfFirstUser && Number(e.id) <= indexOfLastUser) 
   }
   )  
  
